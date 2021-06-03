@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Metrics.Logzio", "App.Metrics.Logzio\App.Metrics.Logzio.csproj", "{92EA435B-3EC2-43FF-8CC2-54637E87AAB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Metrics.LogzioTests", "App.Metrics.LogzioTests\App.Metrics.LogzioTests.csproj", "{6F91EB4F-3661-478C-840C-89A4E9586586}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92EA435B-3EC2-43FF-8CC2-54637E87AAB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92EA435B-3EC2-43FF-8CC2-54637E87AAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92EA435B-3EC2-43FF-8CC2-54637E87AAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92EA435B-3EC2-43FF-8CC2-54637E87AAB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F91EB4F-3661-478C-840C-89A4E9586586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F91EB4F-3661-478C-840C-89A4E9586586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F91EB4F-3661-478C-840C-89A4E9586586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F91EB4F-3661-478C-840C-89A4E9586586}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
