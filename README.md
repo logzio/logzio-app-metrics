@@ -1,5 +1,5 @@
 ## Send Custom metrics from your .NET Core application to Logz.io using App Metrics
-An open-source and cross-platform .NET library used to record metrics within an application.
+App Metrics is an open-source and cross-platform .NET library used to record metrics within an application.
 App Metrics can run on .NET Core or on the full .NET framework also supporting .NET 4.5.2.
 
 For more information about App Metrics and how to use it [click here](https://www.app-metrics.io/)
