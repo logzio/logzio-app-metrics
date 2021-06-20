@@ -16,4 +16,4 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Run unit tests
-        run: dotnet build ${{ github.workspace }}/src/UnitTests/UnitTests.csproj
+        run: dotnet test ${{ github.workspace }}/src/UnitTests/UnitTests.csproj
