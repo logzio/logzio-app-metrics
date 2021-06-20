@@ -14,7 +14,7 @@ jobs:
           dotnet-version: '5.0.x'
       - name: Add url and token to config file 
         run: |
-          sed -i 's/endpoint/${{ secrets.URL }}/g' ${{ github.workspace }}/src/UnitTests/logzio.config
+          sed -i 's#endpoint#${{ secrets.URL }}#g' ${{ github.workspace }}/src/UnitTests/logzio.config
           sed -i 's/token/${{ secrets.TOKEN }}/g' ${{ github.workspace }}/src/UnitTests/logzio.config
       - name: Run unit tests
         run: dotnet test ${{ github.workspace }}/src/UnitTests/UnitTests.csproj
