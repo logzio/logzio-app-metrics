@@ -133,6 +133,36 @@ namespace UnitTests
             Assert.Fail();
         }
 
+        [Test]
+        public void Send_AllMetricTypes_Success()
+        {
+            var gauge = new GaugeOptions { Name = "gauge_test", Tags = new MetricTags("test", "test") };
+            _metrics.Measure.Gauge.SetValue(gauge, 25);
+            
+            var counter = new CounterOptions { Name = "counter_test", Tags = new MetricTags("test", "test") };
+            _metrics.Measure.Counter.Increment(counter);
+            
+            var meter = new MeterOptions { Name = "meter_test", Tags = new MetricTags("test", "test") };
+            _metrics.Measure.Meter.Mark(meter, 10);
+            
+            var histogram = new HistogramOptions { Name = "histogram_test", Tags = new MetricTags("test", "test") };
+            _metrics.Measure.Histogram.Update(histogram, 25);
+            
+            var timer = new TimerOptions { Name = "timer_test", Tags = new MetricTags("test", "test") };
+            _metrics.Measure.Timer.Time(timer, () => {});
+            
+            var apdex = new ApdexOptions {Name = "apdex_test", Tags = new MetricTags("test", "test")};
+            _metrics.Measure.Apdex.Track(apdex);
+            
+            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
+            {
+                Assert.Pass();
+                return;
+            }
+
+            Assert.Fail();
+        }
+
         private bool SendSnapshotToLogzio(MetricsDataValueSource snapshot)
         {
             var logzioMetricsReporter = new LogzioMetricsReporter(new MetricsReportingLogzioOptions(),
