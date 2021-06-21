@@ -27,4 +27,4 @@ jobs:
           dotnet test src --collect:"XPlat Code Coverage"
       - name: Print coverage results
         run: |
-          find src/UnitTests/TestResults -type f -name coverage.cobertura.xml -exex cat {} +
+          find src/UnitTests/TestResults -type f -name coverage.cobertura.xml -exec cat {} +
