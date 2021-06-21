@@ -41,6 +41,8 @@ namespace UnitTests
         {
             _metrics = new MetricsBuilder()
                 .Report.ToLogzioHttp(LogzioConfigFilePath)
+                .Report.ToLogzioHttp(_endpoint, _token)
+                .Report.ToLogzioHttp(_endpoint, _token, TimeSpan.FromSeconds(15))
                 .Build();
         }
 
@@ -125,9 +127,9 @@ namespace UnitTests
         [Test]
         public void Check()
         {
-            var runReportTask =Task.Run(() => _metrics.ReportRunner.RunAsync<LogzioMetricsReporter>());
+            var runReportsTask = Task.WhenAll(_metrics.ReportRunner.RunAllAsync());
 
-            if (runReportTask.Wait(15000) && runReportTask.Status == TaskStatus.RanToCompletion)
+            if (runReportsTask.Wait(15000) && runReportsTask.Status == TaskStatus.RanToCompletion)
             {
                 Assert.Pass();
             }
