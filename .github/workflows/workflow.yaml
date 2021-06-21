@@ -7,16 +7,18 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '3.1.x', '5.0.x' ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'
+          dotnet-version: ${{ matrix.dotnet }}
       - name: Add url and token to config file 
         run: |
           sed -i 's#endpoint#${{ secrets.URL }}#g' ${{ github.workspace }}/src/UnitTests/logzio.config
           sed -i 's/token/${{ secrets.TOKEN }}/g' ${{ github.workspace }}/src/UnitTests/logzio.config
       - name: Run unit tests
         run: |
-          dotnet --list-sdks 
           dotnet test ${{ github.workspace }}/src
