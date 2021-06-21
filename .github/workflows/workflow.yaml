@@ -18,5 +18,5 @@ jobs:
           sed -i 's/token/${{ secrets.TOKEN }}/g' ${{ github.workspace }}/src/UnitTests/logzio.config
       - name: Run unit tests
         run: |
-          dotnet build ${{ github.workspace }}/src
+          dotnet --list-sdks 
           dotnet test ${{ github.workspace }}/src
