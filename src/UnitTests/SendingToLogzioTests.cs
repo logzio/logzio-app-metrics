@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using App.Metrics;
 using App.Metrics.Counter;
 using App.Metrics.Apdex;
@@ -49,13 +50,7 @@ namespace UnitTests
             var gauge = new GaugeOptions { Name = "gauge_test", Tags = new MetricTags("test", "test") };
             _metrics.Measure.Gauge.SetValue(gauge, 25);
             
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
-            {
-                Assert.Pass();
-                return;
-            }
-        
-            Assert.Fail();
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
         }
         
         [Test]
@@ -64,13 +59,7 @@ namespace UnitTests
             var counter = new CounterOptions { Name = "counter_test", Tags = new MetricTags("test", "test") };
             _metrics.Measure.Counter.Increment(counter);
         
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
-            {
-                Assert.Pass();
-                return;
-            }
-        
-            Assert.Fail();
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
         }
         
         [Test]
@@ -79,13 +68,7 @@ namespace UnitTests
             var meter = new MeterOptions { Name = "meter_test", Tags = new MetricTags("test", "test") };
             _metrics.Measure.Meter.Mark(meter, 10);
         
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
-            {
-                Assert.Pass();
-                return;
-            }
-        
-            Assert.Fail();
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
         }
         
         [Test]
@@ -94,13 +77,7 @@ namespace UnitTests
             var histogram = new HistogramOptions { Name = "histogram_test", Tags = new MetricTags("test", "test") };
             _metrics.Measure.Histogram.Update(histogram, 25);
         
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
-            {
-                Assert.Pass();
-                return;
-            }
-        
-            Assert.Fail();
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
         }
         
         [Test]
@@ -109,13 +86,7 @@ namespace UnitTests
             var timer = new TimerOptions { Name = "timer_test", Tags = new MetricTags("test", "test") };
             _metrics.Measure.Timer.Time(timer, () => {});
         
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
-            {
-                Assert.Pass();
-                return;
-            }
-        
-            Assert.Fail();
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
         }
 
         [Test]
@@ -124,13 +95,7 @@ namespace UnitTests
             var apdex = new ApdexOptions {Name = "apdex_test", Tags = new MetricTags("test", "test")};
             _metrics.Measure.Apdex.Track(apdex);
 
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
-            {
-                Assert.Pass();
-                return;
-            }
-
-            Assert.Fail();
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
         }
 
         [Test]
@@ -154,12 +119,19 @@ namespace UnitTests
             var apdex = new ApdexOptions {Name = "apdex_test", Tags = new MetricTags("test", "test")};
             _metrics.Measure.Apdex.Track(apdex);
             
-            if (SendSnapshotToLogzio(_metrics.Snapshot.Get()))
+            Assert.AreEqual(true, SendSnapshotToLogzio(_metrics.Snapshot.Get()));
+        }
+
+        [Test]
+        public void Check()
+        {
+            var runReportTask =Task.Run(() => _metrics.ReportRunner.RunAsync<LogzioMetricsReporter>());
+
+            if (runReportTask.Wait(15000) && runReportTask.Status == TaskStatus.RanToCompletion)
             {
                 Assert.Pass();
-                return;
             }
-
+            
             Assert.Fail();
         }
 
