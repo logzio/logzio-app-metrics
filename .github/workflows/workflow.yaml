@@ -15,9 +15,6 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-      - name: Move to github workspace
-        run: |
-          cd ${{ github.workspace }}
       - name: Add url and token to config file 
         run: |
           sed -i 's#endpoint#${{ secrets.URL }}#g' src/UnitTests/logzio.config
