@@ -28,11 +28,9 @@ jobs:
           dir=$(ls -d src/UnitTests/TestResults/* | head -1)
           cd $dir
 
-          echo | ls -a
-
           # Get line-rate and branch-rate
-          line_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -1)
-          branch_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -2 | tail -1)
+          line_rate=$(head -5 *.xml | egrep -o [0-9].?[0-9]* *.xml | head -1)
+          branch_rate=$(head -5 *.xml | egrep -o [0-9].?[0-9]* *.xml | head -2 | tail -1)
 
           # Print line-rate and branch-rate
           echo | awk -v num=$line_rate '{ printf "line-rate: %d\n", (num * 100) }'
