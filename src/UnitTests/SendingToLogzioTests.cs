@@ -422,18 +422,20 @@ namespace UnitTests
             Assert.AreEqual(true, SendSnapshotToLogzio(metrics.Snapshot.Get()));
         }
 
-        // [Test]
-        // public void Check()
-        // {
-        //     var runReportsTask = Task.WhenAll(_metrics.ReportRunner.RunAllAsync());
-        //
-        //     if (runReportsTask.Wait(15000) && runReportsTask.Status == TaskStatus.RanToCompletion)
-        //     {
-        //         Assert.Pass();
-        //     }
-        //     
-        //     Assert.Fail();
-        // }
+        [Test]
+        public void Check()
+        {
+            var metrics = GetMetricsBuilderWithReportConfigOption();
+            
+            var runReportsTask = Task.WhenAll(metrics.ReportRunner.RunAllAsync());
+        
+            if (runReportsTask.Wait(15000) && runReportsTask.Status == TaskStatus.RanToCompletion)
+            {
+                Assert.Pass();
+            }
+            
+            Assert.Fail();
+        }
         
         private IMetricsRoot GetMetricsBuilderWithReportOptionsOption()
         {
