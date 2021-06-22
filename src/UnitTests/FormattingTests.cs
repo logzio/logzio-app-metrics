@@ -26,7 +26,7 @@ namespace UnitTests
         }
 
         [Test]
-        public async Task Format_Snapshot_Success()
+        public async Task Format_Snapshot_StreamIsNotEmpty()
         {
             _testsUtils.AddGaugeMetricToMetricsBuilder(_metrics);
             _testsUtils.AddCounterMetricToMetricsBuilder(_metrics);
