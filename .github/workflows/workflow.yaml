@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-      - name: Move to ${{ github.workspace }}
+      - name: Move to github workspace
         run: |
           cd ${{ github.workspace }}
       - name: Add url and token to config file 
@@ -25,6 +25,35 @@ jobs:
       - name: Run unit tests
         run: |
           dotnet test src --collect:"XPlat Code Coverage"
-      - name: Print coverage results
+      - name: Move to TestResults directory
         run: |
-          find src/UnitTests/TestResults -type f -name coverage.cobertura.xml -exec cat {} +
+          cd src/UnitTests/TestResults
+      - name: Move to one of the directories
+        run: |
+          dir=$(ls -d */ | head - 1)
+          cd $dir
+      - name: Get line-rate (code-coverage)
+        run: |
+          line_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -1)
+      - name: Get branch-rate (code-coverage)
+        run: |
+          branch_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -2 | tail -1))
+      - name: Print code-coverage
+        run: |
+          echo | awk -v num=$line_rate '{ printf "line-rate: %d\n", (num * 100) }'
+          echo | awk -v num=$branch_rate '{ printf "branch-rate: %d\n", (num * 100) }'
+      - name: Check code-coverage
+        run: |
+          echo | awk -v num=$line_rate '{ if (num < 0.5) { printf "line-rate is less than 50%"; exit 1 } else { exit 0 }}'
+          exit_code=$?
+
+          if [ $exit_code -eq 1 ]; then
+            exit 1
+          fi
+
+          echo | awk -v num=$branch_rate '{ if (num < 0.3) { printf "line-rate is less than 30%"; exit 1 } else { exit 0 }}'
+          exit_code=$?
+
+          if [ $exit_code -eq 1 ]; then
+            exit 1
+          fi          
