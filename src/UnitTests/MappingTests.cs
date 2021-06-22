@@ -76,7 +76,7 @@ namespace UnitTests
 
             var timesSeries = metricTimeSeriesMapper.CreateTimesSeries();
             
-            Assert.IsNotEmpty(timesSeries, "Counter mapping went wrong...");
+            Assert.IsNotEmpty(timesSeries, "Meter mapping went wrong...");
         }
         
         [Test]
@@ -92,7 +92,7 @@ namespace UnitTests
 
             var timesSeries = metricTimeSeriesMapper.CreateTimesSeries();
             
-            Assert.IsNotEmpty(timesSeries, "Counter mapping went wrong...");
+            Assert.IsNotEmpty(timesSeries, "Histogram mapping went wrong...");
         }
         
         [Test]
@@ -108,7 +108,7 @@ namespace UnitTests
 
             var timesSeries = metricTimeSeriesMapper.CreateTimesSeries();
             
-            Assert.IsNotEmpty(timesSeries, "Counter mapping went wrong...");
+            Assert.IsNotEmpty(timesSeries, "Timer mapping went wrong...");
         }
         
         [Test]
@@ -124,7 +124,7 @@ namespace UnitTests
 
             var timesSeries = metricTimeSeriesMapper.CreateTimesSeries();
             
-            Assert.IsNotEmpty(timesSeries, "Counter mapping went wrong...");
+            Assert.IsNotEmpty(timesSeries, "Apdex mapping went wrong...");
         }
     }
 }
