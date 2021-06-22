@@ -31,6 +31,7 @@ jobs:
       - name: Move to one of the directories
         run: |
           dir=$(ls -d */ | head -1)
+          echo $dir
           cd $dir
       - name: Get line-rate (code-coverage)
         run: |
