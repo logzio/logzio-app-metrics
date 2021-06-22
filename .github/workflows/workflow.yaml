@@ -30,7 +30,7 @@ jobs:
           cd src/UnitTests/TestResults
       - name: Move to one of the directories
         run: |
-          dir=$(ls -d */ | head - 1)
+          dir=$(ls -d */ | head -1)
           cd $dir
       - name: Get line-rate (code-coverage)
         run: |
