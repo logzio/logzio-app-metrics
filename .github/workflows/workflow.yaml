@@ -22,26 +22,21 @@ jobs:
       - name: Run unit tests
         run: |
           dotnet test src --collect:"XPlat Code Coverage"
-      - name: Move to TestResults directory
+      - name: Code-coverage
         run: |
-          cd src/UnitTests/TestResults
-      - name: Move to one of the directories
-        run: |
+          # Get one of the firectories in TestResults directory and move to it
           dir=$(ls -d src/UnitTests/TestResults/* | head -1)
-          echo $dir
           cd $dir
-      - name: Get line-rate (code-coverage)
-        run: |
+
+          # Get line-rate and branch-rate
           line_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -1)
-      - name: Get branch-rate (code-coverage)
-        run: |
           branch_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -2 | tail -1)
-      - name: Print code-coverage
-        run: |
+
+          # Print line-rate and branch-rate
           echo | awk -v num=$line_rate '{ printf "line-rate: %d\n", (num * 100) }'
           echo | awk -v num=$branch_rate '{ printf "branch-rate: %d\n", (num * 100) }'
-      - name: Check code-coverage
-        run: |
+
+          # Check code-coverage conditions
           echo | awk -v num=$line_rate '{ if (num < 0.5) { printf "line-rate is less than 50%"; exit 1 } else { exit 0 }}'
           exit_code=$?
 
