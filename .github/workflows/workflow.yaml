@@ -37,7 +37,7 @@ jobs:
           line_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -1)
       - name: Get branch-rate (code-coverage)
         run: |
-          branch_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -2 | tail -1))
+          branch_rate=$(egrep -o [0-9].?[0-9]* coverage.cobertura.xml | head -2 | tail -1)
       - name: Print code-coverage
         run: |
           echo | awk -v num=$line_rate '{ printf "line-rate: %d\n", (num * 100) }'
