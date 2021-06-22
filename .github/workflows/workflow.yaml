@@ -30,6 +30,7 @@ jobs:
           cd src/UnitTests/TestResults
       - name: Move to one of the directories
         run: |
+          echo | ls -d */
           dir=$(ls -d */ | head -1)
           echo $dir
           cd $dir
