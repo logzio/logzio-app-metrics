@@ -260,24 +260,23 @@ Will run the Logz.io reporter only:
 ```C#
 var scheduler = new AppMetricsTaskScheduler(
                 TimeSpan.FromSeconds(15),
-                async () =>
-                {
-                    await Task.Run(() => metrics.ReportRunner.RunAsync<LogzioMetricsReporter>());
-                });
+                async () => { await Task.Run(() => metrics.ReportRunner.RunAsync<LogzioMetricsReporter>()); });
             scheduler.Start();
 ```
 
-To run all reporters immediately:
+To run all reporters once:
 
 ```C#
 Task.WhenAll(metrics.ReportRunner.RunAllAsync());
 ```
 
-To run Logz.io reporter immediately:
+To run Logz.io reporter once:
 
 ```C#
 Task.Run(() => metrics.ReportRunner.RunAsync<LogzioMetricsReporter>());
 ```
+
+- When running reporter once, use await on the task to make sure it finished running before program ends.
 
 ## .NET Core Runtime Metrics
 
@@ -301,13 +300,13 @@ You can customize the types of .NET metrics collected via the Customize method:
 
 ```C#
 IDisposable collector = DotNetRuntimeStatsBuilder
-	.Customize()
-	.WithContentionStats()
-	.WithJitStats()
-	.WithThreadPoolSchedulingStats()
-	.WithThreadPoolStats()
-	.WithGcStats()
-	.StartCollecting(metrics);          // metrics is the MetricsBuilder
+    .Customize()
+    .WithContentionStats()
+    .WithJitStats()
+    .WithThreadPoolSchedulingStats()
+    .WithThreadPoolStats()
+    .WithGcStats()
+    .StartCollecting(metrics);          // metrics is the MetricsBuilder
 ```
 
 This data can be found in Logz.io under these Contexts label:
