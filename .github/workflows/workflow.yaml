@@ -28,11 +28,9 @@ jobs:
       - name: Move to TestResults directory
         run: |
           cd src/UnitTests/TestResults
-          echo | ls -a
       - name: Move to one of the directories
         run: |
-          echo | ls -d */
-          dir=$(ls -d */ | head -1)
+          dir=$(ls -d src/UnitTests/TestResults/* | head -1)
           echo $dir
           cd $dir
       - name: Get line-rate (code-coverage)
