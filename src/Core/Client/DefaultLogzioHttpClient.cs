@@ -73,7 +73,7 @@ namespace Core.Client
                     return new LogzioWriteResult(false, errorMessage);
                 }
 
-                Logger.Trace($"Successful write to Logzio");
+                Logger.Trace("Successful write to Logzio");
 
                 return new LogzioWriteResult(true);
             }
