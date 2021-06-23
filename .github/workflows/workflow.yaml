@@ -53,4 +53,4 @@ jobs:
       - name: Create NuGet package
         run: |
           dotnet build src/Core/Core.csproj
-          nuget pack src/Core/Core.csproj
+          dotnet pack src/Core/Core.csproj
