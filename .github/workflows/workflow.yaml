@@ -1,4 +1,4 @@
-name: Automatic tests
+name: Automatic tests, code-coverage and NuGet push
 on:
   workflow_dispatch:
   push:
