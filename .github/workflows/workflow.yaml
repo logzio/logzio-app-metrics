@@ -54,3 +54,6 @@ jobs:
         run: |
           dotnet build src/Core/Core.csproj
           dotnet pack src/Core/Core.csproj
+      - name: Push NuGet package
+        run: |
+          nuget push src/Core/bin/Debug/*.nupkg -ApiKey ${{ secrets.API_KEY }}
