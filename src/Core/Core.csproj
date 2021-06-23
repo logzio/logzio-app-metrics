@@ -8,7 +8,7 @@
         <Authors>ShiranAvidov, Logz.io</Authors>
         <Description>sends custom metrics to Logz.io over HTTP</Description>
         <PackageProjectUrl>https://github.com/logzio/logzio-app-metrics</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/logzio/logzio-app-metrics</PackageLicenseUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/logzio/logzio-app-metrics</RepositoryUrl>
     </PropertyGroup>
 
