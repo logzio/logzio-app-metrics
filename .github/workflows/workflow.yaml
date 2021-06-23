@@ -56,4 +56,4 @@ jobs:
           dotnet pack src/Core/Core.csproj
       - name: Push NuGet package
         run: |
-          dotnet nuget push src/Core/bin/Debug/*.nupkg -k ${{ secrets.API_KEY }}
+          dotnet nuget push src/Core/bin/Debug/*.nupkg -k ${{ secrets.NUGET_API_KEY }}
