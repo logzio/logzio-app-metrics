@@ -28,7 +28,7 @@ jobs:
           dir=$(ls -d src/UnitTests/TestResults/* | head -1)
           cd $dir
 
-          echo | head -5 | egrep -o [0-9]\.?[0-9]*
+          echo | head -5 *.xml | egrep -o [0-9]\.?[0-9]*
 
 
           # Get line-rate and branch-rate
