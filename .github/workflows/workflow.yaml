@@ -55,3 +55,4 @@ jobs:
         with:
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
           PROJECT_FILE_PATH: src/Core/Core.csproj
+          VERSION_REGEX: ^\s*<AssemblyVersion>(.*)</AssemblyVersion>\s*$
