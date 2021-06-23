@@ -53,7 +53,7 @@ namespace Core.Client
                 var message = new HttpRequestMessage(HttpMethod.Post, _options.EndpointUri);
                 var byteArrayContent = new ByteArrayContent(payload, 0, payload.Length);
                 var version = GetType().Assembly.GetName().Version;
-                string versionStr = version == null ? "1.0.0.0" : version.ToString();
+                string versionStr = version == null ? "1.0.0" : version.ToString();
 
                 message.Headers.Authorization = AuthenticationHeaderValue.Parse($"Bearer {_options.Token}");
                 byteArrayContent.Headers.Remove("Content-Type");

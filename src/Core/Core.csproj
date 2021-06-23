@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
