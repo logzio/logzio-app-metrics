@@ -50,10 +50,6 @@ jobs:
           if [ $exit_code -eq 1 ]; then
             exit 1
           fi
-      - name: Publish NuGet package
-        uses: rohith/publish-nuget@v2
-        with:
-          NUGET_KEY: ${{ secrets.NUGET_KEY }}
-          PROJECT_FILE_PATH: src/Core/Core.csproj
-          VERSION_REGEX: ^\s*<AssemblyVersion>(.*)</AssemblyVersion>\s*$
-          PACKAGE_NAME: Logzio.App.Metrics
+      - name: Create NuGet package
+        run: |
+          nuget pack src/Core/Core.csproj
