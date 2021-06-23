@@ -53,5 +53,5 @@ jobs:
       - name: Publish NuGet package
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_NAME: src/Core/Core.csproj
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          PACKAGE_FILE_PATH: src/Core/Core.csproj
