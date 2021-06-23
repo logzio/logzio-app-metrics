@@ -52,4 +52,5 @@ jobs:
           fi
       - name: Create NuGet package
         run: |
-          nuget pack src/Core/Core.csproj -Build
+          dotnet build src/Core/Core.csproj
+          nuget pack src/Core/Core.csproj
