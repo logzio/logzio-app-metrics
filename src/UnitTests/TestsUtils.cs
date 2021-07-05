@@ -21,7 +21,9 @@ namespace UnitTests
         private const string Log4NetConfigFilePath = "log4net.config";
      
         public const string LogzioConfigFilePath = "logzio.config";
+        public const string LogzioBadConfigFilePath = "bad_logzio.config";
         public const string BadEndpoint = "https://bad.endpoint:1234";
+        public const string BadUri = "https:/bad.uri:1234";
         public const string BadToken = "1234567890";
 
         public string Endpoint { get; private set; }

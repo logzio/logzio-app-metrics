@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Xml.Serialization;
 using App.Metrics;
 using App.Metrics.Builder;
+using App.Metrics.Reporting;
 using Core.Client;
 using HttpPolicy = Core.Client.HttpPolicy;
 
@@ -25,13 +26,11 @@ namespace Core.Reporter
             this IMetricsReportingBuilder metricReporterProviderBuilder,
             MetricsReportingLogzioOptions options)
         {
-            if (metricReporterProviderBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
-            }
-
-            var httpClient = CreateClient(options, options.HttpPolicy);
-            var provider = new LogzioMetricsReporter(options, httpClient);
+            IsMetricReportingBuilderNull(metricReporterProviderBuilder);
+            IsEndpointUriNull(options.Logzio.EndpointUri);
+            IsTokenNullOrWhiteSpace(options.Logzio.Token);
+            
+            var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
         }
@@ -50,17 +49,16 @@ namespace Core.Reporter
             this IMetricsReportingBuilder metricReporterProviderBuilder,
             Action<MetricsReportingLogzioOptions> setupAction)
         {
-            if (metricReporterProviderBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
-            }
+            IsMetricReportingBuilderNull(metricReporterProviderBuilder);
 
             var options = new MetricsReportingLogzioOptions();
 
             setupAction?.Invoke(options);
+            
+            IsEndpointUriNull(options.Logzio.EndpointUri);
+            IsTokenNullOrWhiteSpace(options.Logzio.Token);
 
-            var httpClient = CreateClient(options, options.HttpPolicy);
-            var provider = new LogzioMetricsReporter(options, httpClient);
+            var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
         }
@@ -81,37 +79,12 @@ namespace Core.Reporter
             string endpoint,
             string token)
         {
-            if (metricReporterProviderBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
-            }
+            IsMetricReportingBuilderNull(metricReporterProviderBuilder);
+            IsEndpointValid(endpoint, out var uri);
+            IsTokenNullOrWhiteSpace(token);
 
-            if (string.IsNullOrEmpty(endpoint))
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
-
-            if (string.IsNullOrEmpty(token))
-            {
-                throw new ArgumentNullException(nameof(token));
-            }
-
-            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out var uri))
-            {
-                throw new InvalidOperationException($"{nameof(endpoint)} must be a valid absolute URI");
-            }
-
-            var options = new MetricsReportingLogzioOptions
-            {
-                Logzio =
-                {
-                    EndpointUri = uri,
-                    Token = token
-                }
-            };
-            
-            var httpClient = CreateClient(options, options.HttpPolicy);
-            var provider = new LogzioMetricsReporter(options, httpClient);
+            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, endpoint);
+            var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
         }
@@ -137,38 +110,12 @@ namespace Core.Reporter
             string token,
             TimeSpan flushInterval)
         {
-            if (metricReporterProviderBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
-            }
+            IsMetricReportingBuilderNull(metricReporterProviderBuilder);
+            IsEndpointValid(endpoint, out var uri);
+            IsTokenNullOrWhiteSpace(token);
 
-            if (string.IsNullOrEmpty(endpoint))
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
-
-            if (string.IsNullOrEmpty(token))
-            {
-                throw new ArgumentNullException(nameof(token));
-            }
-
-            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out var uri))
-            {
-                throw new InvalidOperationException($"{nameof(endpoint)} must be a valid absolute URI");
-            }
-
-            var options = new MetricsReportingLogzioOptions()
-            {
-                Logzio =
-                {
-                    EndpointUri = uri,
-                    Token = token
-                },
-                FlushInterval = flushInterval
-            };
-
-            var httpClient = CreateClient(options, options.HttpPolicy);
-            var provider = new LogzioMetricsReporter(options, httpClient);
+            var options = GetMetricsReportingLogzioOptionsWithLogzioAndFlushInterval(uri, token, flushInterval);
+            var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
         }
@@ -187,49 +134,13 @@ namespace Core.Reporter
             this IMetricsReportingBuilder metricReporterProviderBuilder,
             string logzioConfigFilePath)
         {
-            if (metricReporterProviderBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
-            }
+            IsMetricReportingBuilderNull(metricReporterProviderBuilder);
+            IsConfigFilePathValid(logzioConfigFilePath, out var endpoint, out var token);
+            IsEndpointValid(endpoint, out var uri);
+            IsTokenNullOrWhiteSpace(token);
 
-            if (logzioConfigFilePath == null)
-            {
-                throw new ArgumentNullException(nameof(logzioConfigFilePath));
-            }
-            
-            if (!File.Exists(logzioConfigFilePath))
-            {
-                throw new FileNotFoundException($"{logzioConfigFilePath} does not exist");
-            }
-            
-            GetLogzioConnection(logzioConfigFilePath, out string endpoint, out string token);
-            
-            if (string.IsNullOrEmpty(endpoint))
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
-
-            if (string.IsNullOrEmpty(token))
-            {
-                throw new ArgumentNullException(nameof(token));
-            }
-
-            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out var uri))
-            {
-                throw new InvalidOperationException($"{nameof(endpoint)} must be a valid absolute URI");
-            }
-
-            var options = new MetricsReportingLogzioOptions
-            {
-                Logzio =
-                {
-                    EndpointUri = uri,
-                    Token = token
-                }
-            };
-            
-            var httpClient = CreateClient(options, options.HttpPolicy);
-            var provider = new LogzioMetricsReporter(options, httpClient);
+            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, token);
+            var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
         }
@@ -253,50 +164,13 @@ namespace Core.Reporter
             string logzioConfigFilePath,
             TimeSpan flushInterval)
         {
-            if (metricReporterProviderBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
-            }
+            IsMetricReportingBuilderNull(metricReporterProviderBuilder);
+            IsConfigFilePathValid(logzioConfigFilePath, out var endpoint, out var token);
+            IsEndpointValid(endpoint, out var uri);
+            IsTokenNullOrWhiteSpace(token);
 
-            if (logzioConfigFilePath == null)
-            {
-                throw new ArgumentNullException(nameof(logzioConfigFilePath));
-            }
-            
-            if (!File.Exists(logzioConfigFilePath))
-            {
-                throw new FileNotFoundException($"{logzioConfigFilePath} does not exist");
-            }
-            
-            GetLogzioConnection(logzioConfigFilePath, out string endpoint, out string token);
-            
-            if (string.IsNullOrEmpty(endpoint))
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
-
-            if (string.IsNullOrEmpty(token))
-            {
-                throw new ArgumentNullException(nameof(token));
-            }
-
-            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out var uri))
-            {
-                throw new InvalidOperationException($"{nameof(endpoint)} must be a valid absolute URI");
-            }
-
-            var options = new MetricsReportingLogzioOptions()
-            {
-                Logzio =
-                {
-                    EndpointUri = uri,
-                    Token = token
-                },
-                FlushInterval = flushInterval
-            };
-
-            var httpClient = CreateClient(options, options.HttpPolicy);
-            var provider = new LogzioMetricsReporter(options, httpClient);
+            var options = GetMetricsReportingLogzioOptionsWithLogzioAndFlushInterval(uri, token, flushInterval);
+            var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
         }
@@ -319,17 +193,115 @@ namespace Core.Reporter
                 httpPolicy);
         }
 
-        public static void GetLogzioConnection(string logzioConfigFilePath, out string endpoint, out string token)
+        public static bool GetLogzioConnection(string logzioConfigFilePath, out string endpoint, out string token)
         {
             var xmlSerializer = new XmlSerializer(typeof(Configuration.Configuration));
-
+            endpoint = null;
+            token = null;
+            
             using (Stream reader = new FileStream(logzioConfigFilePath, FileMode.Open))
             {
-                var logzioCobfiguration = (Configuration.Configuration) xmlSerializer.Deserialize(reader);
+                var logzioConfiguration = (Configuration.Configuration) xmlSerializer.Deserialize(reader);
 
-                endpoint = logzioCobfiguration.LogzioConnection.Endpoint;
-                token = logzioCobfiguration.LogzioConnection.Token;
+                if (logzioConfiguration?.LogzioConnection?.Endpoint == null)
+                {
+                    return false;
+                }
+
+                if (logzioConfiguration.LogzioConnection.Token == null)
+                {
+                    return false;
+                }
+                
+                endpoint = logzioConfiguration.LogzioConnection.Endpoint;
+                token = logzioConfiguration.LogzioConnection.Token;
             }
+
+            return true;
+        }
+
+        private static void IsMetricReportingBuilderNull(IMetricsReportingBuilder metricReporterProviderBuilder)
+        {
+            if (metricReporterProviderBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
+            }
+        }
+
+        private static void IsEndpointUriNull(Uri uri)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException(nameof(uri));
+            }
+        }
+
+        private static void IsEndpointValid(string endpoint, out Uri uri)
+        {
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                throw new ArgumentNullException(nameof(endpoint));
+            }
+            
+            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out uri))
+            {
+                throw new InvalidOperationException($"{nameof(endpoint)} must be a valid absolute URI");
+            }
+        }
+
+        private static void IsTokenNullOrWhiteSpace(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new ArgumentNullException(nameof(token));
+            }
+        }
+
+        private static void IsConfigFilePathValid(string configFilePath, out string endpoint, out string token)
+        {
+            if (configFilePath == null)
+            {
+                throw new ArgumentNullException(nameof(configFilePath));
+            }
+            
+            if (!File.Exists(configFilePath))
+            {
+                throw new FileNotFoundException($"{configFilePath} does not exist");
+            }
+            
+            if (!GetLogzioConnection(configFilePath, out endpoint, out token))
+            {
+                throw new Exception("The config file is bad formatted");
+            }
+        }
+
+        private static IReportMetrics GetLogzioMetricsReporter(MetricsReportingLogzioOptions options)
+        {
+            var httpClient = CreateClient(options, options.HttpPolicy);
+            
+            return new LogzioMetricsReporter(options, httpClient);
+        }
+
+        private static MetricsReportingLogzioOptions GetMetricsReportingLogzioOptionsWithLogzio(Uri uri, string token)
+        {
+            return new MetricsReportingLogzioOptions()
+            {
+                Logzio =
+                {
+                    EndpointUri = uri,
+                    Token = token
+                }
+            };
+        }
+
+        private static MetricsReportingLogzioOptions GetMetricsReportingLogzioOptionsWithLogzioAndFlushInterval(Uri uri,
+            string token, TimeSpan flushInterval)
+        {
+            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, token);
+
+            options.FlushInterval = flushInterval;
+            
+            return options;
         }
     }
 }
