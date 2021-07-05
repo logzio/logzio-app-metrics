@@ -37,14 +37,14 @@ jobs:
           echo | awk -v num=$branch_rate '{ printf "branch-rate: %d%\n", (num * 100) }'
 
           # Check code-coverage conditions
-          echo | awk -v num=$line_rate '{ if (num < 0.5) { printf "line-rate is less than 50%"; exit 1 } else { exit 0 }}'
+          echo | awk -v num=$line_rate '{ if (num < 0.6) { printf "line-rate is less than 60%"; exit 1 } else { exit 0 }}'
           exit_code=$?
 
           if [ $exit_code -eq 1 ]; then
             exit 1
           fi
 
-          echo | awk -v num=$branch_rate '{ if (num < 0.35) { printf "line-rate is less than 35%"; exit 1 } else { exit 0 }}'
+          echo | awk -v num=$branch_rate '{ if (num < 0.4) { printf "branch-rate is less than 40%"; exit 1 } else { exit 0 }}'
           exit_code=$?
 
           if [ $exit_code -eq 1 ]; then
