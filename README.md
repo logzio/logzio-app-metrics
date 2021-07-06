@@ -28,7 +28,7 @@ For more information about App Metrics and how to use it [click here](https://ww
 
 Install the App.Metrics.Logzio package from the Package Manager Console:
 
-    Install-Package App.Metrics.Logzio
+    Install-Package Logzio.App.Metrics
 
 If you prefer to install the library manually, download the latest version from the releases page.
 
