@@ -42,7 +42,7 @@ Create MetricsBuilder that reports to Logz.io. Here are some of the possible opt
 
 | Variable | Description |
 | --- | --- |
-| logzio_endpoint |  The Logz.io Listener URL for for your region, configured to use port **8052** for http traffic, or port **8053** for https traffic. For more details, see the [regions page](https://docs.logz.io/user-guide/accounts/account-region.html) in logz.io docs. |
+| logzio_endpoint |  The Logz.io Listener URL for your region, configured to use port **8052** for http traffic, or port **8053** for https traffic. For more details, see the [regions page](https://docs.logz.io/user-guide/accounts/account-region.html) in logz.io docs. |
 | metrics_token | The Logz.io Prometheus Metrics account token. Find it under **Settings > Manage accounts**. [Look up your Metrics account token.](https://docs.logz.io/user-guide/accounts/finding-your-metrics-account-token/) |
 
 #### Option 1
