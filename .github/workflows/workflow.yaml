@@ -1,36 +1,59 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the action will run. 
+name: Automatic tests, code-coverage and NuGet push
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  push:
+    branches:
+      - main
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  deploy:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: Add url and token to config file 
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          sed -i 's#ENDPOINT\b#${{ secrets.URL }}#1' src/UnitTests/logzio.config
+          sed -i 's/TOKEN\b/${{ secrets.TOKEN }}/1' src/UnitTests/logzio.config
+      - name: Run unit tests
+        run: |
+          dotnet test src --collect:"XPlat Code Coverage"
+      - name: Code-coverage
+        run: |
+          # Get one of the firectories in TestResults directory and move to it
+          dir=$(ls -d src/UnitTests/TestResults/* | head -1)
+          cd $dir
+
+          # Get line-rate and branch-rate
+          line_rate=$(head -2 *.xml | tail -1 | egrep -o "[0-1]\.?[0-9]*" | head -1)
+          branch_rate=$(head -2 *.xml | tail -1 | egrep -o "[0-1]\.?[0-9]*" | head -2 | tail -1)
+
+          # Print line-rate and branch-rate
+          echo | awk -v num=$line_rate '{ printf "line-rate: %d%\n", (num * 100) }'
+          echo | awk -v num=$branch_rate '{ printf "branch-rate: %d%\n", (num * 100) }'
+
+          # Check code-coverage conditions
+          echo | awk -v num=$line_rate '{ if (num < 0.6) { printf "line-rate is less than 60%"; exit 1 } else { exit 0 }}'
+          exit_code=$?
+
+          if [ $exit_code -eq 1 ]; then
+            exit 1
+          fi
+
+          echo | awk -v num=$branch_rate '{ if (num < 0.4) { printf "branch-rate is less than 40%"; exit 1 } else { exit 0 }}'
+          exit_code=$?
+
+          if [ $exit_code -eq 1 ]; then
+            exit 1
+          fi
+      - name: Create NuGet package
+        run: |
+          dotnet build src/Core/Core.csproj
+          dotnet pack src/Core/Core.csproj
+      - name: Push NuGet package
+        run: |
+          dotnet nuget push src/Core/bin/Debug/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
