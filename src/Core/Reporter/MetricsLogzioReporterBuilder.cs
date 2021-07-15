@@ -83,7 +83,7 @@ namespace Core.Reporter
             IsEndpointValid(endpoint, out var uri);
             IsTokenNullOrWhiteSpace(token);
 
-            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, endpoint);
+            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, token);
             var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
