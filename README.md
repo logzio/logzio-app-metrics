@@ -30,7 +30,7 @@ Install the App.Metrics.Logzio package from the Package Manager Console:
 
     Install-Package Logzio.App.Metrics
 
-If you prefer to install the library manually, download the latest version from the releases page.
+If you prefer to install the library manually, download the latest version from NuGet Gallery.
 
 ## Getting Started
 
