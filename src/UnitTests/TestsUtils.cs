@@ -78,14 +78,6 @@ namespace UnitTests
             metrics.Measure.Apdex.Track(apdex);
         }
 
-        // public bool SendSnapshotToLogzio(MetricsDataValueSource snapshot, string endpoint, string token)
-        // {
-        //     var logzioMetricsReporter = new LogzioMetricsReporter(new MetricsReportingLogzioOptions(),
-        //         new DefaultLogzioHttpClient(new HttpClient(), new LogzioOptions(new Uri(endpoint), token), new HttpPolicy()));
-        //
-        //     return logzioMetricsReporter.FlushAsync(snapshot).Result;
-        // }
-
         public async Task<bool> SendMetricsToLogzio(IMetricsRoot metrics)
         {
             return await metrics.Reporters.First().FlushAsync(metrics.Snapshot.Get());
