@@ -1,7 +1,7 @@
-using System;
 using System.IO;
-using System.Net.Http;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using App.Metrics;
 using App.Metrics.Apdex;
 using App.Metrics.Counter;
@@ -9,7 +9,6 @@ using App.Metrics.Gauge;
 using App.Metrics.Histogram;
 using App.Metrics.Meter;
 using App.Metrics.Timer;
-using Core.Client;
 using Core.Reporter;
 using log4net;
 using log4net.Config;
@@ -18,10 +17,14 @@ namespace UnitTests
 {
     public class TestsUtils
     {
-        private const string Log4NetConfigFilePath = "log4net.config";
+        private const string Log4NetConfigFilePath = "config/log4net.config";
      
-        public const string LogzioConfigFilePath = "logzio.config";
-        public const string LogzioBadConfigFilePath = "bad_logzio.config";
+        public const string LogzioConfigFilePath = "config/logzio.config";
+        public const string LogzioConfigFileBadPath = "config/logzio_bad_path.config";
+        public const string LogzioConfigFileBadFormatPath = "config/logzio_bad_format.config";
+        public const string LogzioConfigFileBadUriPath = "config/logzio_bad_uri.config";
+        public const string LogzioConfigFileBadEndpointPath = "config/logzio_bad_endpoint.config";
+        public const string LogzioConfigFileBadTokenPath = "config/logzio_bad_token.config";
         public const string BadEndpoint = "https://bad.endpoint:1234";
         public const string BadUri = "https:/bad.uri:1234";
         public const string BadToken = "1234567890";
@@ -75,12 +78,17 @@ namespace UnitTests
             metrics.Measure.Apdex.Track(apdex);
         }
 
-        public bool SendSnapshotToLogzio(MetricsDataValueSource snapshot, string endpoint, string token)
+        // public bool SendSnapshotToLogzio(MetricsDataValueSource snapshot, string endpoint, string token)
+        // {
+        //     var logzioMetricsReporter = new LogzioMetricsReporter(new MetricsReportingLogzioOptions(),
+        //         new DefaultLogzioHttpClient(new HttpClient(), new LogzioOptions(new Uri(endpoint), token), new HttpPolicy()));
+        //
+        //     return logzioMetricsReporter.FlushAsync(snapshot).Result;
+        // }
+
+        public async Task<bool> SendMetricsToLogzio(IMetricsRoot metrics)
         {
-            var logzioMetricsReporter = new LogzioMetricsReporter(new MetricsReportingLogzioOptions(),
-                new DefaultLogzioHttpClient(new HttpClient(), new LogzioOptions(new Uri(endpoint), token), new HttpPolicy()));
-        
-            return logzioMetricsReporter.FlushAsync(snapshot).Result;
+            return await metrics.Reporters.First().FlushAsync(metrics.Snapshot.Get());
         }
     }
 }

@@ -17,14 +17,19 @@ jobs:
           dotnet-version: '5.0.x'
       - name: Add url and token to config file 
         run: |
-          sed -i 's#ENDPOINT\b#${{ secrets.URL }}#1' src/UnitTests/logzio.config
-          sed -i 's/TOKEN\b/${{ secrets.TOKEN }}/1' src/UnitTests/logzio.config
+          sed -i 's#ENDPOINT\b#${{ secrets.URL }}#1' src/UnitTests/config/logzio.config
+          sed -i 's/TOKEN\b/${{ secrets.TOKEN }}/1' src/UnitTests/config/logzio.config
+          sed -i 's/TOKEN\b/${{ secrets.TOKEN }}/1' src/UnitTests/config/logzio_bad_endpoint.config
+          sed -i 's#ENDPOINT\b#${{ secrets.URL }}#1' src/UnitTests/config/logzio_bad_format.config
+          sed -i 's/TOKEN\b/${{ secrets.TOKEN }}/1' src/UnitTests/config/logzio_bad_format.config
+          sed -i 's#ENDPOINT\b#${{ secrets.URL }}#1' src/UnitTests/config/logzio_bad_token.config
+          sed -i 's/TOKEN\b/${{ secrets.TOKEN }}/1' src/UnitTests/config/logzio_bad_uri.config
       - name: Run unit tests
         run: |
           dotnet test src --collect:"XPlat Code Coverage"
       - name: Code-coverage
         run: |
-          # Get one of the firectories in TestResults directory and move to it
+          # Get one of the directories in TestResults directory and move to it
           dir=$(ls -d src/UnitTests/TestResults/* | head -1)
           cd $dir
 
