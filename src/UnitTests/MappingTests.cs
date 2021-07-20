@@ -32,7 +32,7 @@ namespace UnitTests
         }
         
         [Test]
-        public void Map_GaugeMetric_TimesSeriesInNotEmpty()
+        public void Map_GaugeMetric_TimesSeriesIsNotEmpty()
         {
             _testsUtils.AddGaugeMetricToMetricsBuilder(_metrics);
 
@@ -48,7 +48,7 @@ namespace UnitTests
         }
         
         [Test]
-        public void Map_CounterMetric_TimesSeriesInNotEmpty()
+        public void Map_CounterMetric_TimesSeriesIsNotEmpty()
         {
             _testsUtils.AddCounterMetricToMetricsBuilder(_metrics);
 
@@ -64,7 +64,7 @@ namespace UnitTests
         }
         
         [Test]
-        public void Map_MeterMetric_TimesSeriesInNotEmpty()
+        public void Map_MeterMetric_TimesSeriesIsNotEmpty()
         {
             _testsUtils.AddMeterMetricToMetricsBuilder(_metrics);
 
@@ -80,7 +80,7 @@ namespace UnitTests
         }
         
         [Test]
-        public void Map_HistogramMetric_TimesSeriesInNotEmpty()
+        public void Map_HistogramMetric_TimesSeriesIsNotEmpty()
         {
             _testsUtils.AddHistogramMetricToMetricsBuilder(_metrics);
 
@@ -96,7 +96,7 @@ namespace UnitTests
         }
         
         [Test]
-        public void Map_TimerMetric_TimesSeriesInNotEmpty()
+        public void Map_TimerMetric_TimesSeriesIsNotEmpty()
         {
             _testsUtils.AddTimerMetricToMetricsBuilder(_metrics);
 
@@ -112,7 +112,7 @@ namespace UnitTests
         }
         
         [Test]
-        public void Map_ApdexMetric_TimesSeriesInNotEmpty()
+        public void Map_ApdexMetric_TimesSeriesIsNotEmpty()
         {
             _testsUtils.AddApdexMetricToMetricsBuilder(_metrics);
 

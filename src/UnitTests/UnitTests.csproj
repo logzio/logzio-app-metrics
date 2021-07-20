@@ -23,13 +23,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="logzio.config">
+      <None Update="config\log4net.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="log4net.config">
+      <None Update="config\logzio.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="bad_logzio.config">
+      <None Update="config\logzio_bad_endpoint.config">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="config\logzio_bad_format.config">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="config\logzio_bad_token.config">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="config\logzio_bad_uri.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

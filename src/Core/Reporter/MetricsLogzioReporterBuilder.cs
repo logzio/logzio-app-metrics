@@ -27,6 +27,7 @@ namespace Core.Reporter
             MetricsReportingLogzioOptions options)
         {
             IsMetricReportingBuilderNull(metricReporterProviderBuilder);
+            IsMetricsReportingLogzioOptionsNull(options);
             IsEndpointUriNull(options.Logzio.EndpointUri);
             IsTokenNullOrWhiteSpace(options.Logzio.Token);
             
@@ -83,7 +84,7 @@ namespace Core.Reporter
             IsEndpointValid(endpoint, out var uri);
             IsTokenNullOrWhiteSpace(token);
 
-            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, endpoint);
+            var options = GetMetricsReportingLogzioOptionsWithLogzio(uri, token);
             var provider = GetLogzioMetricsReporter(options);
 
             return metricReporterProviderBuilder.Using(provider);
@@ -225,6 +226,15 @@ namespace Core.Reporter
             if (metricReporterProviderBuilder == null)
             {
                 throw new ArgumentNullException(nameof(metricReporterProviderBuilder));
+            }
+        }
+
+        private static void IsMetricsReportingLogzioOptionsNull(
+            MetricsReportingLogzioOptions metricsReportingLogzioOptions)
+        {
+            if (metricsReportingLogzioOptions == null)
+            {
+                throw new ArgumentNullException(nameof(metricsReportingLogzioOptions));
             }
         }
 

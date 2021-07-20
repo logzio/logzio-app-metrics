@@ -1,6 +1,6 @@
 ## Send Custom metrics from your .NET Core application to Logz.io using App Metrics
 An open-source and cross-platform .NET library used to record metrics within an application.
-App Metrics can run on .NET Core or on the full .NET framework also supporting .NET 4.5.2.
+Can run on .NET Core 3.1 and higher.
 
 For more information about App Metrics and how to use it [click here](https://www.app-metrics.io/)
 
@@ -30,7 +30,7 @@ Install the App.Metrics.Logzio package from the Package Manager Console:
 
     Install-Package Logzio.App.Metrics
 
-If you prefer to install the library manually, download the latest version from the releases page.
+If you prefer to install the library manually, download the latest version from NuGet Gallery.
 
 ## Getting Started
 

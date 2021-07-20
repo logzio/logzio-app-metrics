@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace UnitTests
 {
-    public class SendingToLogzioTests
+    public class SendingUsingStringsReporterTests
     {
         private readonly TestsUtils _testsUtils = new TestsUtils();
         private IMetricsRoot _metrics;
@@ -19,26 +19,34 @@ namespace UnitTests
         public void Setup()
         {
             _metrics = new MetricsBuilder()
-                .Report.ToLogzioHttp(TestsUtils.LogzioConfigFilePath)
+                .Report.ToLogzioHttp(_testsUtils.Endpoint, _testsUtils.Token)
                 .Build();
         }
-
+        
         [Test]
         public void Send_BadEndpoint_Fail()
         {
+            _metrics = new MetricsBuilder()
+                .Report.ToLogzioHttp(TestsUtils.BadEndpoint, _testsUtils.Token)
+                .Build();
+            
             _testsUtils.AddGaugeMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(false,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), TestsUtils.BadEndpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
         public void Send_BadToken_Fail()
         {
+            _metrics = new MetricsBuilder()
+                .Report.ToLogzioHttp(_testsUtils.Endpoint, TestsUtils.BadToken)
+                .Build();
+            
             _testsUtils.AddGaugeMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(false,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, TestsUtils.BadToken));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
@@ -47,7 +55,7 @@ namespace UnitTests
             _testsUtils.AddCounterMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(true,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
@@ -56,7 +64,7 @@ namespace UnitTests
             _testsUtils.AddMeterMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(true,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
@@ -65,7 +73,7 @@ namespace UnitTests
             _testsUtils.AddHistogramMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(true,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
@@ -74,7 +82,7 @@ namespace UnitTests
             _testsUtils.AddTimerMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(true,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
@@ -83,7 +91,7 @@ namespace UnitTests
             _testsUtils.AddApdexMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(true,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
 
         [Test]
@@ -97,7 +105,7 @@ namespace UnitTests
             _testsUtils.AddApdexMetricToMetricsBuilder(_metrics);
 
             Assert.AreEqual(true,
-                _testsUtils.SendSnapshotToLogzio(_metrics.Snapshot.Get(), _testsUtils.Endpoint, _testsUtils.Token));
+                _testsUtils.SendMetricsToLogzio(_metrics).Result);
         }
     }
 }
