@@ -252,7 +252,7 @@ Will run every reporter the MerticsBuilder has:
 var scheduler = new AppMetricsTaskScheduler(
                 TimeSpan.FromSeconds(15),
                 async () => { await Task.WhenAll(metrics.ReportRunner.RunAllAsync()); });
-            scheduler.Start();
+scheduler.Start();
 ```
 
 Will run the Logz.io reporter only:
@@ -261,7 +261,7 @@ Will run the Logz.io reporter only:
 var scheduler = new AppMetricsTaskScheduler(
                 TimeSpan.FromSeconds(15),
                 async () => { await Task.Run(() => metrics.ReportRunner.RunAsync<LogzioMetricsReporter>()); });
-            scheduler.Start();
+scheduler.Start();
 ```
 
 To run all reporters once:
